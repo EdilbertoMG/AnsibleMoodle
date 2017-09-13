@@ -1,0 +1,4 @@
+---
+# handlers file for webserver
+- name: restart sqlserver
+  service: name=sqlserver state=restarted
