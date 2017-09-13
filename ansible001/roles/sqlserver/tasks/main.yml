@@ -1,30 +1,29 @@
 ---
- - name: Install the MySQL packages
-   apt: name={{ item }} state=installed update_cache=yes
-   with_items:
-     - mysql-server-5.6
-     - mysql-client-5.6
-     - python-mysqldb
-     - libmysqlclient-dev
+# Variable configuration.
+- include: variables.yml
 
- - name: Update MySQL root password for all root accounts
-   mysql_user: name=root host={{ item }} password={{ mysql_root_pass }} state=present
-   with_items:
-     - "{{ ansible_hostname }}"
-     - 127.0.0.1
-     - ::1
-     - localhost
+# Setup/install tasks.
+- include: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+  static: no
 
- - name: Copy the root credentials as .my.cnf file
-   template: src=root.cnf.j2 dest=~/.my.cnf mode=0600
+- include: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
+  static: no
 
- - name: Ensure Anonymous user(s) are not in the database
-   mysql_user: name='' host={{ item }} state=absent
-   with_items:
-     - localhost
-     - "{{ ansible_hostname }}"
+- include: setup-Archlinux.yml
+  when: ansible_os_family == 'Archlinux'
+  static: no
 
- - name: Remove the test database
-   mysql_db: name=test state=absent
-   notify:
-     - Restart MySQL
+- name: Check if MySQL packages were installed.
+  set_fact:
+    mysql_install_packages: "{{ (rh_mysql_install_packages is defined and rh_mysql_install_packages.changed)
+      or (deb_mysql_install_packages is defined and deb_mysql_install_packages.changed)
+      or (arch_mysql_install_packages is defined and arch_mysql_install_packages.changed) }}"
+
+# Configure MySQL.
+- include: configure.yml
+- include: secure-installation.yml
+- include: databases.yml
+- include: users.yml
+- include: replication.yml

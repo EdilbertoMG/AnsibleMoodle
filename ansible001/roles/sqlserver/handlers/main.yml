@@ -1,4 +1,3 @@
 ---
-# handlers file for webserver
-- name: restart sqlserver
-  service: name=sqlserver state=restarted
+- name: restart mysql
+  service: "name={{ mysql_daemon }} state=restarted sleep=5"
