@@ -1,11 +1,11 @@
 #!/bin/bash
 echo "Detediendo dockers"
-docker stop server01 server02 server03
+sudo docker stop server01 server02 server03
 echo "Dockers detenidos"
 echo
 echo "----------------------"
 echo "Eliminando dockers"
-docker rm server01 server02 server03
+sudo docker rm server01 server02 server03
 echo "Dockers eliminados."
 echo
 echo "----------------------"
