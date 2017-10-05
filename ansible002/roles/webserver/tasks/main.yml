@@ -1,16 +1,19 @@
 ---
-- name: add repositories
-  apt_repository: repo={{item}} state=present update_cache=yes
-  with_items:
-    - ppa:nginx/stable
+- name: install apache2
+  apt: name=apache2 update_cache=yes state=latest
 
-- name: instalación de nginx
+
+- name: Install Apache and dependencies
   apt:
-    name: nginx
+    name: "{{ item }}"
     state: present
-
-- name: start nginx
+  with_items:
+    - gcc
+    - make
+    - perl
+        
+- name: Start Apache Service
   service:
-    name: nginx
+    name: apache2
     state: started
     enabled: yes

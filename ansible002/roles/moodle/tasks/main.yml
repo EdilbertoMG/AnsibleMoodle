@@ -15,20 +15,30 @@
     - php7.0-mysql
     - php7.0-intl
     - php7.0-xmlrpc
-    - php7.0-fpm
-  notify: [ 'Restart php7-fpm' ]
+    - libapache2-mod-php7.0
+    - php7.0-xmlrpc
+    - php7.0-zip
+
 
 - name: Create user
   user: name="{{ moodle_user }}"
 
-- name: Create moodle directry
-  file: dest="{{ moodle_path }}" state=directory owner="{{ moodle_user }}"
+#- name: Create moodle directry
+#  file: dest="{{ moodle_path }}" state=directory owner="{{ moodle_user }}"
 
-- name: Create moodle files directry
-  file: dest="{{ moodle_docs }}" state=directory owner="{{ moodle_user }}"
+#- name: Create moodle files directry
+#  file: dest="{{ moodle_docs }}" state=directory owner="{{ moodle_user }}"
 
 - name: Getting Moodle
-  git: repo=https://github.com/moodle/moodle.git version="{{ moodle_version }}" dest="{{ moodle_src }}" accept_hostkey=yes
+  git: repo=https://github.com/moodle/moodle.git version="{{ moodle_version }}" dest="{{ moodle_path }}" accept_hostkey=yes
+
+- name: Add moodle dir installation to apache2
+  command: cp -R /moodle /var/www/html/moodle
+
+- name: Change permissions to moodle dir
+  file:
+    path: "{{ moodle_dir }}"
+    mode: 0777
 
 #- name: Configure Moodle
 #  template: src=config.php.j2 dest="{{ moodle_src }}/config.php"
