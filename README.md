@@ -16,3 +16,4 @@ Ingresa a la carpeta 'ansible000' y sigue los pasos indicados.
 En caso de reiniciar el experiemento ejecute:
 
     ./clean_all.sh
+
