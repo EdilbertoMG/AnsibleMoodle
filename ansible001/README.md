@@ -6,6 +6,6 @@ ansible-playbook -i ../hosts webserver.yml
 ```
 ## Segundo paso, instalación del servidor de bases de datos mendiante ansible.
 ```
-ansible-playbook -i ../hosts mysqlserver.yml
+ansible-playbook -i ../hosts sqlserver.yml
 ```
 
